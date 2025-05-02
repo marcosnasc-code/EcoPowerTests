@@ -23,7 +23,7 @@ public class CadastroClienteService {
             .excludeFieldsWithoutExposeAnnotation()
             .create();
     public Response response;
-    String baseUrl = "https://ecopowerproj-hbhbbkfqdgerh9eg.canadacentral-01.azurewebsites.net";
+    String baseUrl = "http://localhost:8080";
 
 
     public void setFieldsDelivery(String field, String value) {
@@ -57,6 +57,7 @@ public class CadastroClienteService {
             }
             default -> throw new IllegalStateException("Unexpected field: " + field);
         }
+        System.out.println(gson.toJson(cadastroClienteModel));
     }
 
 

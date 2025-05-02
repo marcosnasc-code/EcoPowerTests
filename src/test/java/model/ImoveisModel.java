@@ -8,6 +8,8 @@ public class ImoveisModel {
 
     @Expose
     private String idImovel;
+    @Expose
     private TipoImoveis tipoImoveis;
+    @Expose
     private EnderecoModel endereco;
 }

@@ -11,5 +11,6 @@ public class DadosClienteModel {
 
     @Expose
     private String cpf;
+    @Expose
     private List<ImoveisModel> imoveis;
 }
