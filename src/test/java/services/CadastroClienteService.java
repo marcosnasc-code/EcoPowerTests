@@ -24,6 +24,7 @@ public class CadastroClienteService {
             .create();
     public Response response;
     String baseUrl = "http://localhost:8080";
+    String idDelivery;
 
 
     public void setFieldsDelivery(String field, String value) {
@@ -75,5 +76,25 @@ public class CadastroClienteService {
                 .extract()
                 .response();
     }
+
+    public void retrieveIdDelivery(){
+        idDelivery = String.valueOf(gson.fromJson(response.jsonPath().prettify(), CadastroClienteModel.class).getEmail());
+        System.out.println("ID de entrega (email): " + idDelivery);
+    }
+
+    public void deleteDelivery(String endPoint) {
+        String url = String.format("%s%s/%s", baseUrl, endPoint, idDelivery);
+        //simula token adm para exclusão. Precisa ser trocado sempre que for testado.
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJFY29Qb3dlciIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImV4cCI6MTc0NjI1MDA0NH0.fFs2fVwJgF10TlcDAQQQUNsy_1-o3BU2QxE2-hKQrKE";
+        response = given()
+                .header("Authorization", token)
+                .accept(ContentType.JSON)
+                .when()
+                .delete(url)
+                .then()
+                .extract()
+                .response();
+    }
+
 }
 

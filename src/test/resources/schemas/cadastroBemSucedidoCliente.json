@@ -1,0 +1,171 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/object1746247628.json",
+  "title": "Root",
+  "type": "object",
+  "required": [
+    "nome",
+    "email",
+    "senha",
+    "endereco",
+    "dadosCliente"
+  ],
+  "properties": {
+    "nome": {
+      "$id": "#root/nome",
+      "title": "Nome",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "M1704"
+      ],
+      "pattern": "^.*$"
+    },
+    "email": {
+      "$id": "#root/email",
+      "title": "Email",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "M1704@email.com"
+      ],
+      "pattern": "^.*$"
+    },
+    "senha": {
+      "$id": "#root/senha",
+      "title": "Senha",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "senha123"
+      ],
+      "pattern": "^.*$"
+    },
+    "endereco": {
+      "$id": "#root/endereco",
+      "title": "Endereco",
+      "type": "object",
+      "required": [
+        "cep",
+        "regiao"
+      ],
+      "properties": {
+        "cep": {
+          "$id": "#root/endereco/cep",
+          "title": "Cep",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "12345678"
+          ],
+          "pattern": "^.*$"
+        },
+        "regiao": {
+          "$id": "#root/endereco/regiao",
+          "title": "Regiao",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "SUDESTE"
+          ],
+          "pattern": "^.*$"
+        }
+      }
+    }
+  ,
+    "dadosCliente": {
+      "$id": "#root/dadosCliente",
+      "title": "Dadoscliente",
+      "type": "object",
+      "required": [
+        "cpf",
+        "imoveis"
+      ],
+      "properties": {
+        "cpf": {
+          "$id": "#root/dadosCliente/cpf",
+          "title": "Cpf",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "12345678900"
+          ],
+          "pattern": "^.*$"
+        },
+        "imoveis": {
+          "$id": "#root/dadosCliente/imoveis",
+          "title": "Imoveis",
+          "type": "array",
+          "default": [],
+          "items":{
+            "$id": "#root/dadosCliente/imoveis/items",
+            "title": "Items",
+            "type": "object",
+            "required": [
+              "idImovel",
+              "tipoImoveis",
+              "endereco"
+            ],
+            "properties": {
+              "idImovel": {
+                "$id": "#root/dadosCliente/imoveis/items/idImovel",
+                "title": "Idimovel",
+                "type": "string",
+                "default": "",
+                "examples": [
+                  "1"
+                ],
+                "pattern": "^.*$"
+              },
+              "tipoImoveis": {
+                "$id": "#root/dadosCliente/imoveis/items/tipoImoveis",
+                "title": "Tipoimoveis",
+                "type": "string",
+                "default": "",
+                "examples": [
+                  "RESIDENCIAL"
+                ],
+                "pattern": "^.*$"
+              },
+              "endereco": {
+                "$id": "#root/dadosCliente/imoveis/items/endereco",
+                "title": "Endereco",
+                "type": "object",
+                "required": [
+                  "cep",
+                  "regiao"
+                ],
+                "properties": {
+                  "cep": {
+                    "$id": "#root/dadosCliente/imoveis/items/endereco/cep",
+                    "title": "Cep",
+                    "type": "string",
+                    "default": "",
+                    "examples": [
+                      "12345678"
+                    ],
+                    "pattern": "^.*$"
+                  },
+                  "regiao": {
+                    "$id": "#root/dadosCliente/imoveis/items/endereco/regiao",
+                    "title": "Regiao",
+                    "type": "string",
+                    "default": "",
+                    "examples": [
+                      "SUDESTE"
+                    ],
+                    "pattern": "^.*$"
+                  }
+                }
+              }
+
+            }
+          }
+
+        }
+      }
+    }
+
+  }
+}
