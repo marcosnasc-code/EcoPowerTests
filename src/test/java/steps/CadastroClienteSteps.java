@@ -6,10 +6,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
-import model.EnderecoModel;
-import model.ImoveisModel;
-import model.Regiao;
-import model.TipoImoveis;
+import model.*;
 import org.junit.Assert;
 import services.CadastroClienteService;
 
@@ -98,5 +95,12 @@ public class CadastroClienteSteps {
     @Então("o status code da resposta deve ser {int}")
     public void oStatusCodeDaRespostaDeveSer(int statusCode) {
         Assert.assertEquals(statusCode, cadastroClienteService.response.statusCode());
+    }
+
+    @E("o corpo da resposta de erro da api deve retornar a mensagem {string};")
+    public void oCorpoDaRespostaDeErroDaApiDeveRetornarAMensagem(String message) {
+        ErrorMessageModel errorMessageModel = cadastroClienteService.gson.fromJson(
+                cadastroClienteService.response.jsonPath().prettify(), ErrorMessageModel.class);
+        Assert.assertEquals(message, errorMessageModel.getMessage());
     }
 }
