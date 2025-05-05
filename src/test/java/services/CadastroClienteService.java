@@ -1,7 +1,13 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import io.cucumber.java.es.Dado;
 import io.restassured.response.Response;
 import model.CadastroClienteModel;
@@ -9,12 +15,19 @@ import model.DadosClienteModel;
 import model.EnderecoModel;
 import model.ImoveisModel;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static io.restassured.RestAssured.given;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class CadastroClienteService {
 
@@ -25,6 +38,9 @@ public class CadastroClienteService {
     public Response response;
     String baseUrl = "http://localhost:8080";
     String idDelivery;
+    String schemasPath = "src/test/resources/schemas/";
+    JSONObject jsonSchema;
+    private final ObjectMapper mapper = new ObjectMapper();
 
 
     public void setFieldsDelivery(String field, String value) {
@@ -58,7 +74,7 @@ public class CadastroClienteService {
             }
             default -> throw new IllegalStateException("Unexpected field: " + field);
         }
-        System.out.println(gson.toJson(cadastroClienteModel));
+        //System.out.println(gson.toJson(cadastroClienteModel));
     }
 
 
@@ -85,7 +101,7 @@ public class CadastroClienteService {
     public void deleteDelivery(String endPoint) {
         String url = String.format("%s%s/%s", baseUrl, endPoint, idDelivery);
         //simula token adm para exclusão. Precisa ser trocado sempre que for testado.
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJFY29Qb3dlciIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImV4cCI6MTc0NjI1MDA0NH0.fFs2fVwJgF10TlcDAQQQUNsy_1-o3BU2QxE2-hKQrKE";
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJFY29Qb3dlciIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImV4cCI6MTc0NjM5NTgyOH0.MGoiKDHLmGcOIabHZiGvIx7xsQL4X_8S-u7_24zRpz8";
         response = given()
                 .header("Authorization", token)
                 .accept(ContentType.JSON)
@@ -94,6 +110,31 @@ public class CadastroClienteService {
                 .then()
                 .extract()
                 .response();
+    }
+
+    private JSONObject loadJsonFromFile(String filePath) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(Paths.get(filePath))) {
+            JSONTokener tokener = new JSONTokener(inputStream);
+            return new JSONObject(tokener);
+        }
+    }
+
+    public void setContract(String contract) throws IOException {
+        switch (contract) {
+            case "Cadastro bem-sucedido do cliente" -> jsonSchema = loadJsonFromFile(schemasPath + "cadastroBemSucedidoCliente.json");
+            default -> throw new IllegalStateException("Unexpected contract" + contract);
+        }
+    }
+
+    public Set<ValidationMessage> validateResponseAgainstSchema() throws IOException
+    {
+        JSONObject jsonResponse = new JSONObject(response.getBody().asString());
+        JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
+        JsonSchema schema = schemaFactory.getSchema(jsonSchema.toString());
+        JsonNode jsonResponseNode = mapper.readTree(jsonResponse.toString());
+        //System.out.println(jsonResponse);
+        Set<ValidationMessage> schemaValidationErrors = schema.validate(jsonResponseNode);
+        return schemaValidationErrors;
     }
 
 }

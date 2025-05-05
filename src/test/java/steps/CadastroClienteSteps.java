@@ -1,6 +1,7 @@
 package steps;
 
 import com.google.gson.Gson;
+import com.networknt.schema.ValidationMessage;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
@@ -10,9 +11,11 @@ import model.*;
 import org.junit.Assert;
 import services.CadastroClienteService;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CadastroClienteSteps {
 
@@ -111,5 +114,16 @@ public class CadastroClienteSteps {
     @Quando("eu enviar a requisição com o ID para o endpoint {string} de deleção de entrega")
     public void euEnviarARequisiçãoComOIDParaOEndpointDeDeleçãoDeEntrega(String endPoint) {
         cadastroClienteService.deleteDelivery(endPoint);
+    }
+
+    @E("que o arquivo de contrato esperado é o {string}")
+    public void queOArquivoDeContratoEsperadoÉO(String contract) throws IOException {
+        cadastroClienteService.setContract(contract);
+    }
+
+    @Então("a resposta da requisição deve estar em conformidade com o contrato selecionado")
+    public void aRespostaDaRequisiçãoDeveEstarEmConformidadeComOContratoSelecionado() throws IOException {
+        Set<ValidationMessage> validateResponse = cadastroClienteService.validateResponseAgainstSchema();
+        Assert.assertTrue("O Contrato está inválido. Erros encontrados: " + validateResponse, validateResponse.isEmpty());
     }
 }

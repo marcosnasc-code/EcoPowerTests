@@ -7,7 +7,7 @@ Funcionalidade: Cadastro de novo cliente
     Dado que eu tenha os seguintes dados do Cliente:
       | campo          | valor        |
       | nome           | Arthur       |
-      | email          | art2@email.com|
+      | email          | art5@email.com|
       | senha          | senha123     |
 
     E que o Cliente possua o seguinte endereço:
@@ -25,7 +25,7 @@ Funcionalidade: Cadastro de novo cliente
     Quando eu enviar a requisição para o endpoint "/auth/registro/cliente" de cadastro de Clientes
     Então o status code da resposta deve ser 201
 
-  Cenário: Deve ser possível deletar uma entrega
+  Cenário: Deve ser possível deletar um Cliente
     Dado que eu recupere o ID da entrega criada no contexto
     Quando eu enviar a requisição com o ID para o endpoint "/api/usuarios/deletar" de deleção de entrega
     Então o status code da resposta deve ser 204
