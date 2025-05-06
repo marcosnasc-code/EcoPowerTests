@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 @Data
-public class CadastroClienteModel {
+public class CadastroEmpresaModel {
 
     @Expose(serialize = false)
     private int id;
@@ -17,5 +17,5 @@ public class CadastroClienteModel {
     @Expose
     private EnderecoModel endereco;
     @Expose
-    private DadosClienteModel dadosCliente;
+    private DadosEmpresaModel dadosEmpresa;
 }

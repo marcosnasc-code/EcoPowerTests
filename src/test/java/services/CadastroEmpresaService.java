@@ -8,30 +8,28 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import io.cucumber.java.es.Dado;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import model.CadastroClienteModel;
-import model.DadosClienteModel;
+import model.CadastroEmpresaModel;
+import model.DadosEmpresaModel;
 import model.EnderecoModel;
-import model.ImoveisModel;
+import model.ServicoCadastroModel;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+public class CadastroEmpresaService {
 
-public class CadastroClienteService {
-
-    final CadastroClienteModel cadastroClienteModel = new CadastroClienteModel();
+    final CadastroEmpresaModel cadastroEmpresaModel = new CadastroEmpresaModel();
     public final Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .create();
@@ -43,45 +41,28 @@ public class CadastroClienteService {
     private final ObjectMapper mapper = new ObjectMapper();
 
 
-    public void setFieldsDelivery(String field, String value) {
-        switch (field) {
-            case "nome" -> cadastroClienteModel.setNome(value);
-            case "email" -> cadastroClienteModel.setEmail(value);
-            case "senha" -> cadastroClienteModel.setSenha(value);
+    public void setFieldsDelivery(String field, String value){
+        switch (field){
+            case "nome" -> cadastroEmpresaModel.setNome(value);
+            case "email" -> cadastroEmpresaModel.setEmail(value);
+            case "senha" -> cadastroEmpresaModel.setSenha(value);
 
             case "endereco" -> {
                 EnderecoModel endereco = gson.fromJson(value, EnderecoModel.class);
-                cadastroClienteModel.setEndereco(endereco);
+                cadastroEmpresaModel.setEndereco(endereco);
             }
-
-            case "dadosCliente" -> {
-                DadosClienteModel dadosCliente = gson.fromJson(value, DadosClienteModel.class);
-                cadastroClienteModel.setDadosCliente(dadosCliente);
+            case "dadosEmpresa" -> {
+                DadosEmpresaModel dadosEmpresa = gson.fromJson(value, DadosEmpresaModel.class);
+                cadastroEmpresaModel.setDadosEmpresa(dadosEmpresa);
             }
-
-            case  "imoveis" -> {
-                ImoveisModel imoveis = gson.fromJson(value, ImoveisModel.class);
-                DadosClienteModel dadosCliente = cadastroClienteModel.getDadosCliente();
-
-                if(dadosCliente == null){
-                    dadosCliente = new DadosClienteModel();
-                    cadastroClienteModel.setDadosCliente(dadosCliente);
-                }
-                if (dadosCliente.getImoveis() == null){
-                    dadosCliente.setImoveis(new ArrayList<>());
-                }
-                dadosCliente.getImoveis().add(imoveis);
-            }
-            default -> throw new IllegalStateException("Unexpected field: " + field);
+            default -> throw new IllegalStateException("Unexpected Field: " + field);
         }
-        //System.out.println(gson.toJson(cadastroClienteModel));
+        System.out.println(gson.toJson(cadastroEmpresaModel));
     }
 
-
     public void createDelivery(String endPoint){
-
         String url = baseUrl + endPoint;
-        String bodyToSend = gson.toJson(cadastroClienteModel);
+        String bodyToSend = gson.toJson(cadastroEmpresaModel);
         response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -94,16 +75,15 @@ public class CadastroClienteService {
     }
 
     public void retrieveIdDelivery(){
-        idDelivery = String.valueOf(gson.fromJson(response.jsonPath().prettify(), CadastroClienteModel.class).getEmail());
+        idDelivery = String.valueOf(gson.fromJson(response.jsonPath().prettify(), CadastroEmpresaModel.class).getEmail());
         System.out.println("ID de entrega (email): " + idDelivery);
     }
 
-    public void deleteDelivery(String endPoint) {
+    public void deleteDelivery(String endPoint){
         String url = String.format("%s%s/%s", baseUrl, endPoint, idDelivery);
-        //simula token adm para exclusão. Precisa ser trocado sempre que for testado.
+        //necessário token válido
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJFY29Qb3dlciIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImV4cCI6MTc0NjUxNDc3Mn0.jhPYgTkLRpk2dNG01uv2Tylg7GOaudqBBTNnSA2rEno";
-        response = given()
-                .header("Authorization", token)
+        response = given().header("Authorization", token)
                 .accept(ContentType.JSON)
                 .when()
                 .delete(url)
@@ -113,7 +93,7 @@ public class CadastroClienteService {
     }
 
     private JSONObject loadJsonFromFile(String filePath) throws IOException {
-        try (InputStream inputStream = Files.newInputStream(Paths.get(filePath))) {
+        try(InputStream inputStream = Files.newInputStream(Paths.get(filePath))){
             JSONTokener tokener = new JSONTokener(inputStream);
             return new JSONObject(tokener);
         }
@@ -121,7 +101,7 @@ public class CadastroClienteService {
 
     public void setContract(String contract) throws IOException {
         switch (contract) {
-            case "Cadastro bem-sucedido do cliente" -> jsonSchema = loadJsonFromFile(schemasPath + "cadastroBemSucedidoCliente.json");
+            case "Cadastro bem-sucedido da empresa" -> jsonSchema = loadJsonFromFile(schemasPath + "cadastroBemSucedidoEmpresa.json");
             default -> throw new IllegalStateException("Unexpected contract" + contract);
         }
     }
@@ -138,4 +118,3 @@ public class CadastroClienteService {
     }
 
 }
-

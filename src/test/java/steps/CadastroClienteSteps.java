@@ -126,4 +126,5 @@ public class CadastroClienteSteps {
         Set<ValidationMessage> validateResponse = cadastroClienteService.validateResponseAgainstSchema();
         Assert.assertTrue("O Contrato está inválido. Erros encontrados: " + validateResponse, validateResponse.isEmpty());
     }
+
 }

@@ -1,0 +1,77 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/object1746494463.json",
+  "title": "Root",
+  "type": "object",
+  "required": [
+    "nome",
+    "email",
+    "endereco",
+    "cnpj"
+  ],
+  "properties": {
+    "nome": {
+      "$id": "#root/nome",
+      "title": "Nome",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "Energia Verde"
+      ],
+      "pattern": "^.*$"
+    },
+    "email": {
+      "$id": "#root/email",
+      "title": "Email",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "energiverde3211133@email.com"
+      ],
+      "pattern": "^.*$"
+    },
+    "endereco": {
+      "$id": "#root/endereco",
+      "title": "Endereco",
+      "type": "object",
+      "required": [
+        "cep",
+        "regiao"
+      ],
+      "properties": {
+        "cep": {
+          "$id": "#root/endereco/cep",
+          "title": "Cep",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "98765432"
+          ],
+          "pattern": "^.*$"
+        },
+        "regiao": {
+          "$id": "#root/endereco/regiao",
+          "title": "Regiao",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "NORDESTE"
+          ],
+          "pattern": "^.*$"
+        }
+      }
+    }
+  ,
+    "cnpj": {
+      "$id": "#root/cnpj",
+      "title": "Cnpj",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "12345678000190"
+      ],
+      "pattern": "^.*$"
+    }
+  }
+}

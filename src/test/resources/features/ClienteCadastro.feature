@@ -7,7 +7,7 @@
       Dado que eu tenha os seguintes dados do Cliente:
       | campo          | valor        |
       | nome           | Arthur       |
-      | email          | art@email.com|
+      | email          | art2@email.com|
       | senha          | senha123     |
 
       E que o Cliente possua o seguinte endereço:
